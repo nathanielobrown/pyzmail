@@ -3,13 +3,6 @@
 # (c) alain.spineux@gmail.com
 # http://www.magiksys.net/pyzmail
 
-import sys
-
-if sys.version_info >= (3,):
-    # distribute is required for py3k
-    from distribute_setup import use_setuptools
-    use_setuptools()
-
 import sys, os, shutil
 
 try:
@@ -105,15 +98,15 @@ if 'py2exe' in sys.argv and os.name=='nt':
 
 data_files.append( (doc_dir, [ 'README.txt', 'Changelog.txt', 'LICENSE.txt']) )
 
-# support for python 3.x with "distribute"       
+# support for python 3.x with "setuptools"
 if sys.version_info >= (3,):
     # avoid setuptools to report unknown options under python 2.X
     extra_options['use_2to3'] = True
     # extra_options['convert_2to3_doctests'] = ['src/your/module']
     # extra_options['use_2to3_fixers'] = ['your.fixers' ]
-    extra_options['install_requires']=['distribute'], # be sure we are using distribute      
+    extra_options['install_requires']=['setuptools'], # be sure we are using setuptools
        
-setup(name='pyzmail',
+setup(name='pyzmail36',
       version=version, 
       author='Alain Spineux',
       author_email='alain.spineux@gmail.com',
@@ -121,16 +114,8 @@ setup(name='pyzmail',
       keywords= 'email',
 #      maintainer = 'email', # 
       description='Python easy mail library, to parse, compose and send emails',
-      long_description='pyzmail is a high level mail library for Python 2.x & 3.x. '
-                       'It provides functions and classes that help to parse, '
-                       'compose and send emails. pyzmail exists because their '
-                       'is no reasons that handling mails with Python would '
-                       'be more difficult than with Outlook or Thunderbird. '
-                       'pyzmail hide the difficulties of managing the MIME '
-                       'structure and of the encoding/decoding for '
-                       'internationalized emails. '
-                       'pyzmail is well documented, has a lot of code samples '
-                       'and include 2 scripts: pyzsendmail and pyzinfomail',
+      long_description='This is a fork of pyzmail modified to be '
+                       'pip-installable on Python 3.6',
       license='LGPL',
       packages=[ 'pyzmail', 'pyzmail.tests' ],
       test_suite = 'pyzmail.tests',
@@ -144,8 +129,7 @@ setup(name='pyzmail',
                   "Topic :: Internet",
                   "Intended Audience :: Developers",
                   "Programming Language :: Python",                  
-                  "Programming Language :: Python :: 2",                  
-                  "Programming Language :: Python :: 3",                  
+                  "Programming Language :: Python :: 3",
                   ],
       cmdclass = cmdclass,
       **extra_options)
