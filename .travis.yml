@@ -14,3 +14,17 @@ install:
 
 script:
 - python setup.py test
+
+before_deploy:
+- echo "__version__='${TRAVIS_TAG}'" > pyzmail/version.py
+
+deploy:
+  skip_cleanup: true
+  provider: pypi
+  on:
+    tags: true
+    repo: ascoderu/pyzmail
+    python: '3.6'
+  user: ascoderu
+  password:
+    secure: phZ/6LOTz1ny8cHcM1xXotkf9pRTxXD8GkbBUl5/f2rDmvsaDevUGpALekerfccytpa27CjzKwoHbqaddnb4v+SKxXlcBuijTDKogJQnxZjteJo+ewySvbE7CRKxFP0TPFbW+sBaZ8IUsFhLC9mZCWjZ3wFFcTdNwBhritN19LCqRmITGTZBVsYM/Yj9ND64ociS1GkE4lZN4APKSPxcmJAR4mcfKv4OVwN0zg9wuTLqBtiWzIcuTPJsRL63s5oihXml3Hg9ORliJXGzxOyIjpg70tr/KM1k4YVqUaFBwZU3FnGl9pX+zKuLWJY6h6p7DoHVj2l+nWSyDensHE8DLdRiSAWqo5LuF6ZKLIYcgHRyLAAzgQd4pqZTQO8YVLVEhvvjLwheuw423W25Zjb1QvCA+GQv5n8vpf+KhCmQZnlsevxPDJsWh6ChHh4pPuQYNIBqT+fy/3lc9znsODl27Hmsa9ZWp87DOBuUIFNBPvTB4NjacTgJX1/p2/vNh2QMAj4AXb7b1vNjfe5B4IMWN5qMESw/APQOobj5BZwAXv5Sl5nJqSFyIL4PR6qUgfOBAr0cNucszllst2tzWA6XHlSAk5tq1ElZOiXvFSRu03FfrRrLoF0TnNVPdXhBKts2tMVEK+N3s4FkUwPREkp3WT+aWa5kmILTMdd+K0jkQ+c=
