@@ -11,21 +11,21 @@ class TestBoth(unittest.TestCase):
     def test_compose_and_parse(self):
         """test generate and parse"""
 
-        sender=(u'Me', 'me@foo.com')
-        recipients=[(u'Him', 'him@bar.com'), 'just@me.com']
-        subject=u'Le sujet en Fran\xe7ais'
-        text_content=u'Bonjour aux Fran\xe7ais'
+        sender=('Me', 'me@foo.com')
+        recipients=[('Him', 'him@bar.com'), 'just@me.com']
+        subject='Le sujet en Fran\xe7ais'
+        text_content='Bonjour aux Fran\xe7ais'
         prefered_encoding='iso-8859-1'
         text_encoding='iso-8859-1'
         attachments=[('attached content', 'text', 'plain', 'textfile1.txt', 'us-ascii'),
-                     (u'Fran\xe7ais', 'text', 'plain', 'textfile2.txt', 'iso-8859-1'),
+                     ('Fran\xe7ais', 'text', 'plain', 'textfile2.txt', 'iso-8859-1'),
                      ('Fran\xe7ais', 'text', 'plain', 'textfile3.txt', 'iso-8859-1'),
                      (b'image', 'image', 'jpg', 'imagefile.jpg', None),
                      ]
-        embeddeds=[(u'embedded content', 'text', 'plain', 'embedded', 'us-ascii'),
+        embeddeds=[('embedded content', 'text', 'plain', 'embedded', 'us-ascii'),
                    (b'picture', 'image', 'png', 'picture', None),
                    ]
-        headers=[ ('X-extra', u'extra value'), ('X-extra2', u"Seconde ent\xe8te"), ('X-extra3', u'last extra'),]
+        headers=[ ('X-extra', 'extra value'), ('X-extra2', "Seconde ent\xe8te"), ('X-extra3', 'last extra'),]
 
         message_id_string='pyzmail'
         date=1313558269
@@ -90,7 +90,7 @@ class TestBoth(unittest.TestCase):
                 if found:
                     self.assertEqual(mailpart.type, attach[1]+'/'+attach[2])
                     payload=mailpart.get_payload()
-                    if attach[1]=='text' and attach[4] and isinstance(attach[0], unicode):
+                    if attach[1]=='text' and attach[4] and isinstance(attach[0], str):
                         payload=payload.decode(attach[4])
                     self.assertEqual(payload, attach[0])
                 else:

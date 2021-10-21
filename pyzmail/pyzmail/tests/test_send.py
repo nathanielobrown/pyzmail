@@ -42,7 +42,7 @@ class TestSend(unittest.TestCase):
             asyncore.loop(1)
 
 
-        self.payload, self.mail_from, self.rcpt_to, self.msg_id=compose_mail((u'Me', 'me@foo.com'), [(u'Him', 'him@bar.com')], u'the subject', 'iso-8859-1', ('Hello world', 'us-ascii'))
+        self.payload, self.mail_from, self.rcpt_to, self.msg_id=compose_mail(('Me', 'me@foo.com'), [('Him', 'him@bar.com')], 'the subject', 'iso-8859-1', ('Hello world', 'us-ascii'))
 
         # start the server after having built the payload, to handle failure in
         # the code above

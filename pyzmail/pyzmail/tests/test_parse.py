@@ -21,19 +21,19 @@ class TestParse(unittest.TestCase):
 
     def test_decode_mail_header(self):
         """test decode_mail_header()"""
-        self.assertEqual(decode_mail_header(''), u'')
-        self.assertEqual(decode_mail_header('hello'), u'hello')
-        self.assertEqual(decode_mail_header('hello '), u'hello ')
-        self.assertEqual(decode_mail_header('=?iso-8859-1?q?Courrier_=E8lectronique_Fran=E7ais?='), u'Courrier \xe8lectronique Fran\xe7ais')
-        self.assertEqual(decode_mail_header('=?utf8?q?Courrier_=C3=A8lectronique_Fran=C3=A7ais?='), u'Courrier \xe8lectronique Fran\xe7ais')
-        self.assertEqual(decode_mail_header('=?utf-8?b?RnJhbsOnYWlz?='), u'Fran\xe7ais')
-        self.assertEqual(decode_mail_header('=?iso-8859-1?q?Courrier_=E8lectronique_?= =?utf8?q?Fran=C3=A7ais?='), u'Courrier \xe8lectronique Fran\xe7ais')
-        self.assertEqual(decode_mail_header('=?iso-8859-1?q?Courrier_=E8lectronique_?= =?utf-8?b?RnJhbsOnYWlz?='), u'Courrier \xe8lectronique Fran\xe7ais')
+        self.assertEqual(decode_mail_header(''), '')
+        self.assertEqual(decode_mail_header('hello'), 'hello')
+        self.assertEqual(decode_mail_header('hello '), 'hello ')
+        self.assertEqual(decode_mail_header('=?iso-8859-1?q?Courrier_=E8lectronique_Fran=E7ais?='), 'Courrier \xe8lectronique Fran\xe7ais')
+        self.assertEqual(decode_mail_header('=?utf8?q?Courrier_=C3=A8lectronique_Fran=C3=A7ais?='), 'Courrier \xe8lectronique Fran\xe7ais')
+        self.assertEqual(decode_mail_header('=?utf-8?b?RnJhbsOnYWlz?='), 'Fran\xe7ais')
+        self.assertEqual(decode_mail_header('=?iso-8859-1?q?Courrier_=E8lectronique_?= =?utf8?q?Fran=C3=A7ais?='), 'Courrier \xe8lectronique Fran\xe7ais')
+        self.assertEqual(decode_mail_header('=?iso-8859-1?q?Courrier_=E8lectronique_?= =?utf-8?b?RnJhbsOnYWlz?='), 'Courrier \xe8lectronique Fran\xe7ais')
         if sys.version_info >= (3,):
-            self.assertEqual(decode_mail_header('h_subject_q_iso_8858_1 : =?ISO-8859-1?Q?Fran=E7ais=E20accentu=E9?= !'), u'h_subject_q_iso_8858_1 : Fran\xe7ais\xe20accentu\xe9 !')
+            self.assertEqual(decode_mail_header('h_subject_q_iso_8858_1 : =?ISO-8859-1?Q?Fran=E7ais=E20accentu=E9?= !'), 'h_subject_q_iso_8858_1 : Fran\xe7ais\xe20accentu\xe9 !')
         else:
             # 2.X is a bit buggy and add white spaces
-            self.assertEqual(decode_mail_header('h_subject_q_iso_8858_1 : =?ISO-8859-1?Q?Fran=E7ais=E20accentu=E9?= !'), u'h_subject_q_iso_8858_1 :Fran\xe7ais\xe20accentu\xe9!')
+            self.assertEqual(decode_mail_header('h_subject_q_iso_8858_1 : =?ISO-8859-1?Q?Fran=E7ais=E20accentu=E9?= !'), 'h_subject_q_iso_8858_1 :Fran\xe7ais\xe20accentu\xe9!')
 
     def test_get_mail_addresses(self):
         """test get_mail_addresses()"""
@@ -45,21 +45,21 @@ class TestParse(unittest.TestCase):
         self.assertEqual([ ('Foo', 'foo@example.com'), ('bar@example.com', 'bar@example.com')], get_mail_addresses(Msg('Foo <foo@example.com> , bar@example.com'), 'to'))
         self.assertEqual([ ('Mr Foo', 'foo@example.com'), ('bar@example.com', 'bar@example.com')], get_mail_addresses(Msg('Mr\nFoo <foo@example.com> , bar@example.com'), 'to'))
 
-        self.assertEqual([ (u'Beno\xeet', 'benoit@example.com')], get_mail_addresses(Msg('=?utf-8?q?Beno=C3=AEt?= <benoit@example.com>'), 'to'))
+        self.assertEqual([ ('Beno\xeet', 'benoit@example.com')], get_mail_addresses(Msg('=?utf-8?q?Beno=C3=AEt?= <benoit@example.com>'), 'to'))
 
         # address already encoded into utf8 (bad)
-        address=u'Ant\xf3nio Foo <a.foo@example.com>'.encode('utf8')
+        address='Ant\xf3nio Foo <a.foo@example.com>'.encode('utf8')
         if sys.version_info<(3, 0):
-            self.assertEqual([(u'Ant\ufffd\ufffdnio Foo', 'a.foo@example.com')], get_mail_addresses(Msg(address), 'to'))
+            self.assertEqual([('Ant\ufffd\ufffdnio Foo', 'a.foo@example.com')], get_mail_addresses(Msg(address), 'to'))
         else:
             # Python 3.2 return header when surrogate characters are used in header
-            self.assertEqual([(u'Ant??nio Foo', 'a.foo@example.com'), ], get_mail_addresses(Msg(email.header.Header(address, charset=email.charset.UNKNOWN8BIT, header_name='to')), 'to'))
+            self.assertEqual([('Ant??nio Foo', 'a.foo@example.com'), ], get_mail_addresses(Msg(email.header.Header(address, charset=email.charset.UNKNOWN8BIT, header_name='to')), 'to'))
 
     def test_get_filename(self):
         """test get_filename()"""
         import email.mime.image
 
-        filename=u'Fran\xe7ais.png'
+        filename='Fran\xe7ais.png'
         if sys.version_info<(3, 0):
             encoded_filename=filename.encode('iso-8859-1')
         else:
@@ -72,7 +72,7 @@ class TestParse(unittest.TestCase):
 
         attach=email.mime.image.MIMEImage(payload, 'png')
         attach.add_header('Content-Disposition', 'attachment', filename=('iso-8859-1', 'fr', encoded_filename))
-        self.assertEqual(u'Fran\xe7ais.png', get_filename(attach))
+        self.assertEqual('Fran\xe7ais.png', get_filename(attach))
 
         attach=email.mime.image.MIMEImage(payload, 'png')
         attach.set_param('name', 'image.png')
@@ -80,7 +80,7 @@ class TestParse(unittest.TestCase):
 
         attach=email.mime.image.MIMEImage(payload, 'png')
         attach.set_param('name', ('iso-8859-1', 'fr', encoded_filename))
-        self.assertEqual(u'Fran\xe7ais.png', get_filename(attach))
+        self.assertEqual('Fran\xe7ais.png', get_filename(attach))
 
         attach=email.mime.image.MIMEImage(payload, 'png')
         attach.add_header('Content-Disposition', 'attachment', filename='image.png')
@@ -162,13 +162,13 @@ The text.
 '''
 
     def check_message_1(self, msg):
-        self.assertEqual(msg.get_subject(), u'simple test')
-        self.assertEqual(msg.get_decoded_header('subject'), u'simple test')
-        self.assertEqual(msg.get_decoded_header('User-Agent'), u'pyzmail')
+        self.assertEqual(msg.get_subject(), 'simple test')
+        self.assertEqual(msg.get_decoded_header('subject'), 'simple test')
+        self.assertEqual(msg.get_decoded_header('User-Agent'), 'pyzmail')
         self.assertEqual(msg.get('User-Agent'), 'pyzmail')
-        self.assertEqual(msg.get_address('from'), (u'Me', 'me@foo.com'))
-        self.assertEqual(msg.get_addresses('to'), [(u'A', 'a@foo.com'), (u'B', 'b@foo.com')])
-        self.assertEqual(msg.get_addresses('cc'), [(u'C', 'c@foo.com'), (u'd@foo.com', 'd@foo.com')])
+        self.assertEqual(msg.get_address('from'), ('Me', 'me@foo.com'))
+        self.assertEqual(msg.get_addresses('to'), [('A', 'a@foo.com'), ('B', 'b@foo.com')])
+        self.assertEqual(msg.get_addresses('cc'), [('C', 'c@foo.com'), ('d@foo.com', 'd@foo.com')])
         self.assertEqual(len(msg.mailparts), 1)
         self.assertEqual(msg.text_part, msg.mailparts[0])
         self.assertEqual(msg.html_part, None)
@@ -204,7 +204,7 @@ bo\xc3\xaete mail = mailbox
 """
 
     def check_message_2(self, msg):
-        self.assertEqual(msg.get_subject(), u'contains 8bits attachments using different encoding')
+        self.assertEqual(msg.get_subject(), 'contains 8bits attachments using different encoding')
 
         body, file1, file2=msg.mailparts
 
@@ -223,29 +223,29 @@ bo\xc3\xaete mail = mailbox
     raw_3=b'Content-Type: text/plain; charset="us-ascii"\n' \
           b'MIME-Version: 1.0\n' \
           b'Content-Transfer-Encoding: 7bit\n' \
-          + u'Subject: Beno\xeet & Ant\xf3nio\n'.encode('utf8') +\
+          + 'Subject: Beno\xeet & Ant\xf3nio\n'.encode('utf8') +\
           b'From: =?utf-8?q?Beno=C3=AEt?= <benoit@example.com>\n' \
-          + u'To: Ant\xf3nio Foo <a.foo@example.com>\n'.encode('utf8') \
-          + u'Cc: Beno\xeet <benoit@foo.com>, d@foo.com\n'.encode('utf8') +\
+          + 'To: Ant\xf3nio Foo <a.foo@example.com>\n'.encode('utf8') \
+          + 'Cc: Beno\xeet <benoit@foo.com>, d@foo.com\n'.encode('utf8') +\
           b'User-Agent: pyzmail\n' \
           b'\n' \
           b'The text.\n'
 
     def check_message_3(self, msg):
-        subject=u'Beno\ufffd\ufffdt & Ant\ufffd\ufffdnio' #  if sys.version_info<(3, 0) else u'Beno??t & Ant??nio'
+        subject='Beno\ufffd\ufffdt & Ant\ufffd\ufffdnio' #  if sys.version_info<(3, 0) else u'Beno??t & Ant??nio'
         self.assertEqual(msg.get_subject(), subject)
         self.assertEqual(msg.get_decoded_header('subject'), subject)
-        self.assertEqual(msg.get_decoded_header('User-Agent'), u'pyzmail')
+        self.assertEqual(msg.get_decoded_header('User-Agent'), 'pyzmail')
         self.assertEqual(msg.get('User-Agent'), 'pyzmail')
-        self.assertEqual(msg.get_address('from'), (u'Beno\xeet', 'benoit@example.com'))
+        self.assertEqual(msg.get_address('from'), ('Beno\xeet', 'benoit@example.com'))
 
         to=msg.get_addresses('to')
         self.assertEqual(to[0][1], 'a.foo@example.com')
-        self.assertEqual(to[0][0], u'Ant\ufffd\ufffdnio Foo' if sys.version_info<(3, 0) else u'Ant??nio Foo')
+        self.assertEqual(to[0][0], 'Ant\ufffd\ufffdnio Foo' if sys.version_info<(3, 0) else 'Ant??nio Foo')
 
         cc=msg.get_addresses('cc')
         self.assertEqual(cc[0][1], 'benoit@foo.com')
-        self.assertEqual(cc[0][0], u'Beno\ufffd\ufffdt' if sys.version_info<(3, 0) else u'Beno??t')
+        self.assertEqual(cc[0][0], 'Beno\ufffd\ufffdt' if sys.version_info<(3, 0) else 'Beno??t')
         self.assertEqual(cc[1], ('d@foo.com', 'd@foo.com'))
 
         self.assertEqual(len(msg.mailparts), 1)
@@ -263,14 +263,14 @@ bo\xc3\xaete mail = mailbox
             check(PyzMessage.factory(io.BytesIO(input)))
             check(message_from_binary_file(io.BytesIO(input)))
 
-        if isinstance(input, basestring):
+        if isinstance(input, str):
 
             check(PyzMessage.factory(input))
             check(message_from_string(input))
 
-            import StringIO
-            check(PyzMessage.factory(StringIO.StringIO(input)))
-            check(message_from_file(StringIO.StringIO(input)))
+            import io
+            check(PyzMessage.factory(io.StringIO(input)))
+            check(message_from_file(io.StringIO(input)))
 
     def test_pyzmessage_factories(self):
         """test PyzMessage class different sources"""

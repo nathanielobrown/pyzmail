@@ -59,7 +59,7 @@ def sanitize_filename(filename, alt_name, alt_ext):
     if not filename:
         return alt_name+alt_ext
 
-    if ((sys.version_info<(3, 0) and isinstance(filename, unicode)) or \
+    if ((sys.version_info<(3, 0) and isinstance(filename, str)) or \
         (sys.version_info>=(3, 0) and isinstance(filename, str))):
         filename=filename.encode('ascii', 'ignore')
 
